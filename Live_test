@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#download files
+wget https://github.com/HackBio-Internship/public_datasets/blob/main/vcfs_and_indexes/bangladesh.vcf.gz?raw=true -O bangladesh.vcf.gz
+wget https://github.com/HackBio-Internship/public_datasets/blob/main/vcfs_and_indexes/china.vcf.gz?raw=true -O china.vcf.gz
+
+#using tabix command
+tabix bangladesh.vcf.gz 
+tabix china.vcf.gz
+
+#merge files with bcftools
+bcftools merge bangladesh.vcf.gz china.vcf.gz > merged.vcf
