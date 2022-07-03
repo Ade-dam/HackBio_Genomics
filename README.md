@@ -104,7 +104,7 @@ Every individual has a unique pattern of somatic and germline variants. This bei
 
 ### METHODOLOGY
 This graphical illustration below shows the steps taken in the identification of somatic and germline variants in tumor and normal pairs
-
+(img src ="https://github.com/Ade-dam/HackBio_Genomics/blob/main/Report_Stage2%20-%20Word%207_3_2022%205_19_30%20AM%20(2).png")
 
 #### DATASET DOWNLOAD
 It is important to first do an analysis of the dataset. The sequencing reads to be analyzed are gotten from real-world data from a cancer patient’s tumor and normal tissue. The original data includes human chromosomes 5, 12 and 17.
