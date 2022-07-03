@@ -147,6 +147,7 @@ Note: It is necessary to have all commands installed for this project
 
 #### PRE-PROCESSING AND TRIMMING
 i) Quality check
+
 The reads quality were examined using fastqc and the aggregate report generated with multiqc.
 
 ```
@@ -173,6 +174,7 @@ multiqc Fastqc_Reports -o Fastqc_Reports
 ```
 
 ii) Removing low quality sequences using Trimmomatic
+
 Trimmomatic is a script that enables quality and adapter trimming. After analyzing data quality, removing sequences that do not meet quality standards is next.
 
 ```
@@ -202,6 +204,7 @@ multiqc  trimmed_reads/Fastqc_results  -o trimmed_reads/Fastqc_results
 Mapping of sample sequences against the reference genome is conducted to determine the most likely source of the observed sequencing reads.
 
 - Read mapping
+
 In order to align the data, we need a reference to align against. First, a directory is created for the reference and then copied. The reference is indexed to be able to align the data.
 ```
 #Index reference file	
@@ -226,6 +229,7 @@ bash mapping.sh
 ```
 
 - Conversion of the SAM file to BAM file, sorting and indexing
+
 A Binary Alignment Map (BAM) format is an equivalent to sam but its developed for fast processing and indexing. It stores every read base, base quality and uses a single conventional technique for all types of data. 
 ```
 nano indexing.sh
@@ -253,7 +257,7 @@ do
 done
 ```
 ```
-bash refilter.sh
+bash filter.sh
 ```
 
 - Duplicates removal
