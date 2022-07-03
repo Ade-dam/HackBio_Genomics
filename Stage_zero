@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Simple bash task
 firstname = "Damilola"
 lastname = "Adegbite"
