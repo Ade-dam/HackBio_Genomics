@@ -1,0 +1,195 @@
+#!/bin/bash
+
+#dataset download
+mkdir -p raw_data 
+cd raw_data
+	
+wget https://zenodo.org/record/2582555/files/SLGFSK-N_231335_r1_chr5_12_17.fastq.gz
+wget https://zenodo.org/record/2582555/files/SLGFSK-N_231335_r2_chr5_12_17.fastq.gz
+wget https://zenodo.org/record/2582555/files/SLGFSK-T_231336_r1_chr5_12_17.fastq.gz
+wget https://zenodo.org/record/2582555/files/SLGFSK-T_231336_r2_chr5_12_17.fastq.gz
+
+#reference sequence
+mkdir ref
+cd ref
+wget https://zenodo.org/record/2582555/files/hg19.chr5_12_17.fa.gz
+
+#gunzip reference
+gunzip hg19.chr5_12_17.fa.gz
+PRE-PROCESSING AND TRIMMING
+The reads quality were examined using fastqc and an aggregate report generated with multiqc
+
+#pre-processing and trimming
+#quality checks
+#create directory for the fastqc output
+mkdir -p Fastqc_Reports  
+
+
+#create a list.txt file
+nano list.txt
+
+#copy the normal and tumor dataset name
+SLGFSK-N_231335
+SLGFSK-T_231336
+
+#Quality check on reads
+for sample in `cat list.txt`
+do
+	fastqc raw_data/${sample}*_r1_chr5_12_17.fastq.gz -o Fastqc_Reports
+done
+
+multiqc Fastqc_Reports -o Fastqc_Reports	
+
+#Trimming with trimmomatic
+nano trimmed.sh
+
+mkdir -p trimmed_reads
+
+for sample in `cat list.txt`
+do
+       trimmomatic PE -threads 8 ${sample}_r1_chr5_12_17.fastq.gz ${sample}_r2_chr5_12_17.fastq.gz \
+               trimmed_reads/${sample}_r1_paired.fq.gz trimmed_reads/${sample}_r1_unpaired.fq.gz \
+               trimmed_reads/${sample}_r2_paired.fq.gz trimmed_reads/${sample}_r2_unpaired.fq.gz \
+               ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:8:keepBothReads \
+               LEADING:3 TRAILING:10 MINLEN:25
+       
+       fastqc  trimmed_reads/${sample}_r1_paired.fq.gz  trimmed_reads/${sample}_r2_paired.fq.gz \
+                 -o trimmed_reads/Fastqc_results
+done 
+
+bash trimmed.sh
+
+multiqc  trimmed_reads/Fastqc_results  -o trimmed_reads/Fastqc_results
+
+#mapped reads postprocessing
+#Index reference file	
+bwa index hg19.chr5_12_17.fa
+
+#bwa mem for alignment
+nano mapping.sh
+mkdir Mapping
+   
+#Perform alignment
+bwa mem -R '@RG\tID:231335\tSM:Normal' ref/hg19.chr5_12_17.fa trimmed_reads/SLGFSK-N_231335_r1_paired.fq.gz \
+      trimmed_reads/SLGFSK-N_231335_r2_paired.fq.gz > Mapping/SLGFSK-N_231335.sam
+
+bwa mem -R '@RG\tID:231336\tSM:Tumor' ref/hg19.chr5_12_17.fa trimmed_reads/SLGFSK-T_231336_r1_paired.fq.gz \
+       trimmed_reads/SLGFSK-T_231336_r2_paired.fq.gz > Mapping/SLGFSK-T_231336.sam	
+
+bash mapping.sh
+
+#conversion of sam to bam
+nano indexing.sh
+
+for sample in `cat list.txt`
+do
+        Convert SAM to BAM and sort it 
+        samtools view -@ 20 -S -b Mapping/${sample}.sam | samtools sort -n -@ 32 > Mapping/${sample}.sorted.bam
+        
+        Index BAM file
+        samtools index Mapping/${sample}.sorted.bam
+done
+
+bash indexing.sh
+
+#filter mapped reads
+nano filter.sh
+for sample in `cat list.txt`
+do
+	#Filter BAM files
+        samtools view -q 1 -f 0x2 -F 0x8 -b Mapping/${sample}.sorted.bam > Mapping/${sample}.filtered1.bam
+done
+
+nano filter.sh
+
+#remove duplicates
+#use the command rmdup
+nano rmdup.sh
+
+for sample in `cat list.txt`
+do
+	samtools collate -o Mapping/${sample}.filtered1.bam Mapping/${sample}.namecollate.bam
+        samtools fixmate -m Mapping/${sample}.namecollate.bam Mapping/${sample}.fixmate.bam
+        samtools sort -@ 32 -o Mapping/${sample}.positionsort.bam Mapping/${sample}.fixmate.bam
+        samtools markdup -@32 -r Mapping/${sample}.positionsort.bam Mapping/${sample}.clean.bam
+done
+
+bash rmdup.sh
+
+#leftalign bam
+nano leftalign.sh
+
+for sample in `cat list.txt`
+do      
+        cat Mapping/${sample}.clean.bam  | bamleftalign -f hg19.chr5_12_17.fa -m 5 -c > Mapping/${sample}.leftAlign.bam
+
+done
+
+bash leftalign.sh
+
+#recalibrate mapping reads
+nano recalibrate.sh
+
+for sample in `cat list.txt`
+do
+        samtools calmd -@ 32 -b Mapping/${sample}.leftAlign.bam ref/hg19.chr5_12_17.fa > Mapping/${sample}.recalibrate.bam
+done
+
+bash recalibrate.sh
+
+#refilter read mapping
+nano refilter.sh
+
+for sample in `cat list.txt`
+do
+        bamtools filter -in Mapping/${sample}.recalibrate.bam -mapQuality “<=254” > Mapping/${sample}.refilter.bam
+done
+
+bash refilter.sh
+
+#variant calling
+#convert data to pileup
+nano variants.sh
+
+mkdir Variants
+
+for sample in `cat list.txt`
+do
+        samtools mpileup -f ref/hg19.chr5_12_17.fa Mapping/${sample}.refilter.bam --min-MQ 1 --min-BQ 28 \
+                > Variants/${sample}.pileup
+done
+
+bash variants.sh
+
+#call variants
+varscan somatic Variants/SLGFSK-N_231335.pileup \
+        Variants/SLGFSK-T_231336.pileup Variants/SLGFSK \
+        --normal-purity 1  --tumor-purity 0.5 --output-vcf 1
+
+#merge vcf
+bgzip Variants/SLGFSK.snp.vcf > Variants/SLGFSK.snp.vcf.gz
+bgzip Variants/SLGFSK.indel.vcf > Variants/SLGFSK.indel.vcf.gz
+tabix Variants/SLGFSK.snp.vcf.gz
+tabix Variants/SLGFSK.indel.vcf.gz
+bcftools merge Variants/SLGFSK.snp.vcf.gz Variants/SLGFSK.indel.vcf.gz > Variants/SLGFSK.vcf
+
+#variants annotation
+#download jar file
+wget https://snpeff.blob.core.windows.net/versions/snpEff_latest_core.zip
+
+#unzip file
+unzip snpEff_latest_core.zip
+		
+#download snpEff database
+ snpEff download hg19		
+
+#annotate variants
+ snpEff hg19 Variants/SLGFSK.vcf > Variants/SLGFSK.ann.vcf
+
+#Clinical annotation
+#installation
+wget https://raw.github.com/arq5x/gemini/master/gemini/scripts/gemini_install.py
+python gemini_install.py /usr/local /usr/local/share/gemini
+
+#command to use gemini for clinical annotation
+gemini load -v Variants/SLGFSK.ann.vcf -t snpEff Annotation/gemini.db
