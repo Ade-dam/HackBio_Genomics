@@ -1,0 +1,108 @@
+#Simple bash task
+firstname = "Damilola"
+lastname = "Adegbite"
+
+#print on same line
+echo $firstname $lastname
+#print on different lines
+echo -e $firstname\n$lastname
+
+#OR
+x = "Damilola"
+y = "Adegbite"
+echo $x $y
+echo -e $x\n$y
+
+
+
+
+
+
+#Biocomputing tasks
+
+#create a new folder titled your name
+$ mkdir Damilola
+
+#create another new directory titled biocomputing and change to that directory with one line of commad
+$ mkdir biocomputing && cd biocomputing
+
+#download these 3 files:
+#a. https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.fna    
+#b. https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.gbk   
+#c. https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.gbk   
+$ wget https://raw.githubusercontent.com/josoga2/dataset-
+repos/main/wildtype.fna 
+https://raw.githubusercontent.com/josoga2/dataset-repos/mai
+n/wildtype.gbk 
+https://raw.githubusercontent.com/josoga2/dataset-repos/mai
+n/wildtype.gbk
+
+#OH! You made a mistake. You have to move the .fna file to the folder titled your name 
+directly
+$ mv wildtpe.fna ../Damilola/
+
+#OH No! The gbk file is a duplicate, they are actually the same thing. Please delete it
+$ rm wildtype.gbk.1
+
+#The .fna file is actually from a bacteria, and it should definitely have a TATA (tata) box for 
+initiating gene transcription. The molecular biologist is trying to understand the implication 
+of dual TATA sequences The files got mixed up and we are not sure which is wildtype and 
+which is mutant. The mutant should have “tatatata” while the normal should have just 
+“tata”. Can you confirm if the file is mutant or wild type               
+$ grep 'tatatata' wildtype.fna
+
+#If it is mutant, print all the lines that show it is a mutant into a new file
+$ grep 'tatatata' wildtype.fna > mutant.txt
+
+#Clear your terminal space and print all the commands you have used today
+$ clear && history
+
+#list the files of the two folders
+$ ls && ls ../biocomputing/
+
+#exit the terminal
+$ exit
+
+
+
+
+
+
+#Linux_biocomputing
+
+#Use the figlet command to draw a graphical representation of your name.
+sudo apt install figlet
+figlet Damilola
+
+#create a folder compare and perform commands in it
+mkdir compare && cd compare
+
+#download file
+wget https://www.bioinformatics.babraham.ac.uk/training/Introduction%20to
+%20Unix/unix_intro_data.tar.gz 
+
+#Unzip using gunzip command
+gunzip Unix/unix_intro_data.tar.gz 
+
+#untar the .tar file with tar command
+tar -xf unix_intro_data.tar
+
+#Get into seqmonk_genomes/Saccharomyces cerevisiae/EF4 and 
+identify the rRNAs present in Mito.dat.
+cd seqmonk_genomes/'Saccharomyces cerevisiae'/EF4/
+grep 'rRNA' Mito.dat
+
+#Using cp copy Mito.dat into the compare directory.
+cp Mito.dat ../../../ 
+#Use nano to effect the following edits:
+#i. Change Mito to Mitochondrion in the ID and AC header lines
+#ii. Save the file and exit nano
+#iii. Rename the file from Mito.dat to   Mitochondrion.txt   
+nano Mito.dat
+bash Mitochondria.txt
+
+#Calculate the total number of lines in lane8_DD_P4_TTAGGC_L008_R1.fastq.gz
+gzip -cd lane8_DD_P4_TTAGGC_L008_R1.fastq.gz | wc -l
+
+#Print the total number of lines in all fastq.gz files and save it as a new file
+gzip -cd *fastq.gz | wc -l > fastqtotal2.txt
