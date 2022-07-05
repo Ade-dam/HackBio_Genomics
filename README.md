@@ -8,11 +8,11 @@ A workshop/internship in biotech transformations in life sciences
 Being that the primary programming language in genomics is the Born Again Shell (BASh), we used Bash to carry out basic and introductory tasks. Tasks ranging from creating and working with directories, downloading files and datatypes as well as differentiating between mutants and wildtypes.
 Moreover, we presented texts in graphical representation, unzipped and untared files and used nano to make edits. Identification rRNAs present in sample files and used commands to find the total number of lines in various files.
 
-Skillmap : BASh, Linux,   Command line/Terminal, Git/Github
-
 Softwares : Conda, Samtools, Fastp, Seqtk
 
 With these, we completed two stories provided by the HackBio Team
+
+***Skillmap*** : BASh, Linux,   Command line/Terminal, Git/Github
 
 ## Week 2 (Stage_one)
 ### Application of prograaming language to solve biological problems
@@ -59,7 +59,7 @@ sudo apt install *software*
 
 Downloads some sample datasets from here: https://github.com/josoga2/yt-dataset/tree/main/dataset
 
-Skillmap : BASh, Linux, Command Line/Terminal Usage, Git and GitHub, Data Analysis
+***Skillmap*** : BASh, Linux, Command Line/Terminal Usage, Git and GitHub, Data Analysis
 
 ## LIVE TEST
 This was done by writing codes live as the admins watched or by making a video recording. Different tasks was given to different fellows to Enable fairness and transperacy
@@ -382,6 +382,30 @@ gemini load -v Variants/SLGFSK.ann.vcf -t snpEff Annotation/gemini.db
 ### CONCLUSION
 After following the step-by-step process to replicate the recommended tutorial as well as identification of the variants, we can conclude that the interpretation of any list of variants (somatic, germline or LOH) depends crucially on genetic and cancer-specific variant and gene annotations. The insights gotten from the reproduction of this workflow can help to track genetic events driving the growth of tumor in patients which are useful in revealing variants known to affect drug resistance/sensitivity, tumor aggressiveness and useful in diagnosis, prognosis, developing therapeutic tactics.
 
-Skillmap: BASh, Linux, Command Line/Terminal Usage, Git and GitHub, Molecular Biology, NGS, Data Analysis
+***Skillmap*** : BASh, Linux, Command Line/Terminal Usage, Git and GitHub, Molecular Biology, NGS, Data Analysis
 
-## Week 4 (Project)
+## Week 4 (Stage3: Project)
+#### Solving real problems in genomics in academic and industrial settings
+
+A number of six intensive projects were provided for us to pick one. For each project, we built and annotated our dataset. we also created a metadata table that explains the properties of each file in the dataset. We formed teams, work collaboratively to perform the analysis and prepared a technical specification report that lists all the dataset, softwares and computing facilities we used. This technical specification post will be published on Medium.
+
+This tasks are relevent in academic and industrial settings as we were able to develop, discover, build and deploy in genomics.
+
+The project topic is seen below
+
+### Pharmacogenomics of Human Leukocyte Antigen(HLA) variants in 4 Asian populations
+In this task, we compared the HLA variants between 4 Asian populations groups in the 1000 genomes database. We identified the major variations between Dai (CDX), Han (CHB), and Southern Han Chinese (CHS) and Vietnamese (KHV).
+
+Using plink, we performed principal component analysis (PCA) to decompose the structure of the data and identify the different populations in the PCA plot.
+
+We performed linkage disequilibrium by:
+
+- Creating pruned set of markers that are not highly correlated
+
+- Calculating identity by descent score on the pruned marker list
+
+- Clustering individuals into homogeneous groups and perform a multidimensional scaling analysis 
+
+- Performing LD between samples of the chromosomes on the variants 
+
+***Skillmap*** : BASH, Linux, Command Line/Terminal Usage, Git and GitHub, Molecular Biology, NGS, Data Analysis, Genome Data Analysis, Project Management
