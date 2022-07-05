@@ -413,9 +413,9 @@ We performed linkage disequilibrium by:
 ***Skillmap*** : BASH, Linux, Command Line/Terminal Usage, Git and GitHub, Molecular Biology, NGS, Data Analysis, Genome Data Analysis, Project Management
 
 ## Reference
-- https://app.thehackbio.com/
 - https://training.galaxyproject.org/training-material/topics/variant-analysis/tutorials/somatic-variants/tutorial.html
 - https://www-users.york.ac.uk/~dj757/popgenomics/workshop6.html
 - http://hpc.ilri.cgiar.org/beca/training/data_mgt_2017/BackgroundMaterial/PlinkTutorial.pdf
 - https://github.com/Fredrick-Kakembo/Somatic-and-Germline-variant-Identification-from-Tumor-and-normal-Sample-Pairs/blob/main/README.md
 - https://www.ncbi.nlm.nih.gov/snp/
+- https://app.thehackbio.com/
