@@ -384,7 +384,7 @@ After following the step-by-step process to replicate the recommended tutorial a
 
 ***Skillmap*** : BASh, Linux, Command Line/Terminal Usage, Git and GitHub, Molecular Biology, NGS, Data Analysis
 
-## Week 4 (Stage3: Project)
+## Week 4 (Stage_three: Project)
 #### Solving real problems in genomics in academic and industrial settings
 
 A number of six intensive projects were provided for us to pick one. For each project, we built and annotated our dataset. we also created a metadata table that explains the properties of each file in the dataset. We formed teams, work collaboratively to perform the analysis and prepared a technical specification report that lists all the dataset, softwares and computing facilities we used. This technical specification post will be published on Medium.
@@ -396,7 +396,9 @@ The project topic is seen below
 ### Pharmacogenomics of Human Leukocyte Antigen(HLA) variants in 4 Asian populations
 In this task, we compared the HLA variants between 4 Asian populations groups in the 1000 genomes database. We identified the major variations between Dai (CDX), Han (CHB), and Southern Han Chinese (CHS) and Vietnamese (KHV).
 
-Using plink, we performed principal component analysis (PCA) to decompose the structure of the data and identify the different populations in the PCA plot.
+Using plink, we performed principal component analysis (PCA) to decompose the structure of the data and identify the different populations in the PCA plot. This step was performed in R Studio so some knowledge of R programming was required here.
+
+<img src="https://github.com/Ade-dam/HackBio_Genomics/raw/main/RStudio%207_5_2022%208_43_52%20PM.png">
 
 We performed linkage disequilibrium by:
 
@@ -409,3 +411,11 @@ We performed linkage disequilibrium by:
 - Performing LD between samples of the chromosomes on the variants 
 
 ***Skillmap*** : BASH, Linux, Command Line/Terminal Usage, Git and GitHub, Molecular Biology, NGS, Data Analysis, Genome Data Analysis, Project Management
+
+## Reference
+- https://app.thehackbio.com/
+- https://training.galaxyproject.org/training-material/topics/variant-analysis/tutorials/somatic-variants/tutorial.html
+- https://www-users.york.ac.uk/~dj757/popgenomics/workshop6.html
+- http://hpc.ilri.cgiar.org/beca/training/data_mgt_2017/BackgroundMaterial/PlinkTutorial.pdf
+- https://github.com/Fredrick-Kakembo/Somatic-and-Germline-variant-Identification-from-Tumor-and-normal-Sample-Pairs/blob/main/README.md
+- https://www.ncbi.nlm.nih.gov/snp/
