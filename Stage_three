@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#Download the required datasets
+wget https://github.com/HackBio-Internship/public_datasets/raw/main/Asia_HLA_Distribution/complete_1000_genomes_sample_list_.tsv
+wget https://github.com/HackBio-Internship/public_datasets/raw/main/Asia_HLA_Distribution/binary_plink_file/asia.bed.gz
+wget https://github.com/HackBio-Internship/public_datasets/raw/main/Asia_HLA_Distribution/binary_plink_file/asia.bim
+wget https://github.com/HackBio-Internship/public_datasets/raw/main/Asia_HLA_Distribution/binary_plink_file/asia.fam
+
+#unzip the .gz file
+gunzip asia.bed.gz
+
+#create eigenvalues
+plink --bfile asia --pca --chr-set 36 no-xy
+
+#R and Rstudio should be installed in the pc because the generation of PCA plot will be done using R
+#setting directory
+#setwd("D:/HackBio/Stage 3")
+#checking directory
+#getwd()
+#pca1 <- read.table("~/HackBio/Stage 3/datasets/plink.eigenvec", sep =" ", header = F)
+#library("ggplot2")
+#ggplot(data=pca1, aes(V3,V4)) + geom_point()
+#metadata <- read.table("~/HackBio/Stage 3/datasets/complete_1000_genomes_sample_list_.tsv", sep ="\t", header = TRUE)
+#head(metadata)
+#merge_data <- merge(x = pca1, y = metadata, by.x = "V2", by.y = "Sample.name", all = F )
+#ggplot(data = merge_data, aes(V3,V4,color = Population.code)) + geom_point()
+
+
+#Perform linkage disequlibrium
+#Create a pruned set of markers that are not highly correlated. Note that the threshold can be adjusted e.g 100 10 0.05
+plink --bfile asia --indep-pairwise 1000 5 0.02 --out prune1 
+
+#Calculate identity by descent score on the pruned marker list
+plink --bfile asia --extract prune1.prune.in --genome --out ibs1 
+
+#Cluster individuals into homogeneous groups and perform a multidimensional scaling analysis 
+plink --bfile asia --read-genome ibs1.genome --cluster --ppc 1e-3 --cc --mds-plot 2 --out strat1
+
+#Perform LD between samples on the chromosomes of the variants
+less prune1.prune.in
+
+#Note the first and last value number of each chromosome to be used
+#plink --bfile asia --chr6 --from-kb xxx --to-kb yyyyyy --make-bed --out asia_zz
+#xxx=firstvalue minus 3 digits(due to kb), yyyyyy=lastvalue minus 3 digits, zz=name of chromosome
+#using chromosome 6
+plink --bfile asia --chr6 --from-kb 231 --to-kb 171031 --make-bed --out asia_c6
+
+plink --bfile asia_c6 --r2 --out asia_c6
